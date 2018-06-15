@@ -9,7 +9,7 @@
  * drawn but that is not the case. What's really happening is the entire "scene"
  * is being drawn over and over, presenting the illusion of animation.
  *
- * This engine makes the canvas' context (ctx) object globally available to make 
+ * This engine makes the canvas' context (ctx) object globally available to make
  * writing app.js a little simpler to work with.
  */
 
@@ -79,7 +79,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -93,7 +93,29 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
+        player.update(0,0);
+    }
+
+    /*
+    Checks if the enemy and the player are on the same "square"
+    Dividing by the "square"'s width (x-coordinate) and using floor makes
+    comparison of player's and enemy's x-coordinate possible.
+    */
+    function checkCollisions() {
+        const playerX = player.getX();
+        const playerY = player.getY();
+        let sameY = false;
+        let sameX = false;
+        allEnemies.forEach(function(enemy) {
+            if(enemy.getY() === playerY) {
+                sameY = true;
+                if((Math.floor(enemy.getX()/101)) == (playerX/101)) {
+                    sameX = true;
+                }
+            }
+        });
+        if(sameX && sameY)
+            player.die();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -117,7 +139,7 @@ var Engine = (function(global) {
             numRows = 6,
             numCols = 5,
             row, col;
-        
+
         // Before drawing, clear existing canvas
         ctx.clearRect(0,0,canvas.width,canvas.height)
 
