@@ -116,6 +116,11 @@ Player.prototype.getX = function() {
 Player.prototype.getY = function() {
   return this.y;
 };
+
+Player.prototype.setSprite = function(sprite) {
+    this.sprite = 'images/'+sprite+'.png';
+    console.log(this.sprite);
+}
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player

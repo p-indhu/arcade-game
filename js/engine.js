@@ -68,6 +68,22 @@ var Engine = (function(global) {
         main();
     }
 
+    function selectAvatar() {
+        document.getElementById('avatar').style.display = 'block';
+    }
+
+    function closeAvatarScreen(evt) {
+        document.getElementById('avatar').style.display = 'none';
+        player.setSprite(evt.target.id);
+        init();
+    }
+
+    document.querySelector('#char-boy').addEventListener('click', closeAvatarScreen);
+    document.querySelector('#char-cat-girl').addEventListener('click', closeAvatarScreen);
+    document.querySelector('#char-horn-girl').addEventListener('click', closeAvatarScreen);
+    document.querySelector('#char-pink-girl').addEventListener('click', closeAvatarScreen);
+    document.querySelector('#char-princess-girl').addEventListener('click', closeAvatarScreen);
+
     /* This function is called by main (our game loop) and itself calls all
      * of the functions which may need to update entity's data. Based on how
      * you implement your collision detection (when two entities occupy the
@@ -114,8 +130,9 @@ var Engine = (function(global) {
                 }
             }
         });
-        if(sameX && sameY)
+        if(sameX && sameY) {
             player.die();
+          }
     }
 
     /* This function initially draws the "game level", it will then call
@@ -195,9 +212,14 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png'
+        
     ]);
-    Resources.onReady(init);
+    Resources.onReady(selectAvatar);
 
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developers can use it more easily
