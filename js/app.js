@@ -10,7 +10,7 @@ constructor(x, y) {
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
-    this.speed = Math.floor(Math.random() * (8 - 4 + 1)) + 4;;
+    this.speed = Math.floor(Math.random() * (8 - 4 + 1)) + 4;
 }
 }
 
@@ -18,8 +18,9 @@ constructor(x, y) {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
   //  const randomspeed = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
-    if(this.x < 505)
+    if(this.x < 505) {
         this.x = this.x  + this.speed + dt;
+      }
     else {
         this.x = -90;
         this.changeSpeed();
@@ -42,7 +43,7 @@ Enemy.prototype.changeRow = function() {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y - 15);
 };
 
 Enemy.prototype.getX = function() {
@@ -50,8 +51,12 @@ Enemy.prototype.getX = function() {
 };
 
 Enemy.prototype.getY = function() {
-  return this.y;
+    return this.y;
 };
+
+Enemy.prototype.reset = function() {
+    this.x = 0;
+}
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -61,6 +66,8 @@ constructor(x, y) {
     this.sprite = 'images/char-boy.png';
     this.x = x;
     this.y = y;
+    this.points = 0;
+    this.life = 3;
 }
 }
 
@@ -107,6 +114,8 @@ Player.prototype.handleInput = function(move) {
 Player.prototype.die = function() {
     this.x = 202;
     this.y = 415;
+    this.life = this.life - 1;
+    return this.life;
 }
 
 Player.prototype.getX = function() {
@@ -119,8 +128,58 @@ Player.prototype.getY = function() {
 
 Player.prototype.setSprite = function(sprite) {
     this.sprite = 'images/'+sprite+'.png';
-    console.log(this.sprite);
 }
+
+Player.prototype.reset = function() {
+    this.x = 202;
+    this.y = 415;
+    this.points = 0;
+    this.life = 3;
+}
+
+class Gem {
+constructor(x, y, color) {
+    this.sprite = 'images/gem-'+color+'.png';
+    this.x = x;
+    this.y = y;
+    this.color = color;
+}
+}
+
+Gem.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x + 28, this.y + 32, 50, 85);
+};
+
+Gem.prototype.collected = function() {
+    this.x = -100;
+    this.y = -100;
+}
+
+Gem.prototype.getX = function() {
+    return this.x;
+};
+
+Gem.prototype.getY = function() {
+    return this.y;
+};
+
+Gem.prototype.getColor = function() {
+    return this.color;
+}
+
+Gem.prototype.setX = function() {
+    this.x = xValues[Math.floor(Math.random() * xValues.length)];
+}
+
+Gem.prototype.setY = function() {
+    this.y = yValues[Math.floor(Math.random() * yValues.length)];
+}
+
+Gem.prototype.reset = function() {
+    this.setX();
+    this.setY();
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -129,17 +188,23 @@ let enemy1 = new Enemy(0, 249);
 let enemy2 = new Enemy(0, 83);
 let enemy3 = new Enemy(0, 166);
 let allEnemies = [enemy1, enemy2, enemy3];
-
+const xValues = [0,101,202,303,404];
+const yValues = [83,166,249];
+let gem1 = new Gem(xValues[Math.floor(Math.random() * xValues.length)], yValues[Math.floor(Math.random() * yValues.length)], 'blue');
+let gem2 = new Gem(xValues[Math.floor(Math.random() * xValues.length)], yValues[Math.floor(Math.random() * yValues.length)], 'orange');
+let gem3 = new Gem(xValues[Math.floor(Math.random() * xValues.length)], yValues[Math.floor(Math.random() * yValues.length)], 'green');
+let allGems = [gem1, gem2, gem3];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
+
     var allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',
         40: 'down'
     };
-
-    player.handleInput(allowedKeys[e.keyCode]);
+    if(overlayOn === false)
+        player.handleInput(allowedKeys[e.keyCode]);
 });

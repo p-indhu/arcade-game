@@ -12,7 +12,7 @@
  * This engine makes the canvas' context (ctx) object globally available to make
  * writing app.js a little simpler to work with.
  */
-
+let overlayOn = false;
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -23,7 +23,6 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
-
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
@@ -66,6 +65,7 @@ var Engine = (function(global) {
         reset();
         lastTime = Date.now();
         main();
+        startTimer();
     }
 
     function selectAvatar() {
@@ -96,6 +96,8 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         checkCollisions();
+        checkGemCollection();
+        checkForWin();
     }
 
     /* This is called by the update function and loops through all of the
@@ -131,9 +133,87 @@ var Engine = (function(global) {
             }
         });
         if(sameX && sameY) {
-            player.die();
+            let life = player.die();
+            document.querySelector('#lives-data').textContent = life;
+                if(life === 0) {
+                      stoptimer = true;
+                      loseScreen();
+                }
           }
     }
+
+    function loseScreen() {
+        overlayOn = true;
+        document.getElementById('lose-screen').style.display = 'block';
+    }
+
+    function closeLoseScreen() {
+        document.getElementById('lose-screen').style.display = 'none';
+        reset();
+        overlayOn = false;
+    }
+
+    document.querySelector('#lose-screen').addEventListener('click', closeLoseScreen);
+
+    function checkGemCollection() {
+      const playerX = player.getX();
+      const playerY = player.getY();
+      let sameY = false;
+      let sameX = false;
+      let color;
+      allGems.forEach(function(gem) {
+          if(gem.getY() === playerY) {
+              sameY = true;
+              if(gem.getX() == playerX) {
+                  sameX = true;
+                  color = gem.getColor();
+                  gem.collected();
+                  switch(color) {
+                      case 'blue':
+                          player.points += 10;
+                          break;
+                      case 'green':
+                          player.points += 20;
+                          break;
+                      case 'orange':
+                          player.points += 50;
+                          break;
+                  }
+                  document.querySelector('#score-data').innerHTML = player.points;
+              }
+          }
+      });
+    }
+
+    function checkForWin() {
+        if(player.getY() === 0) {
+            stoptimer = true;
+            winScreen();
+        }
+    }
+
+    function finalData() {
+        const scoreGems = document.querySelector('#score-data').textContent;
+        document.querySelector('#score-gems').textContent = scoreGems;
+        const time = document.querySelector('#timer-data').textContent;
+        const timeBonus = 5 * parseInt(time);
+        document.querySelector('#time-bonus').textContent = time + " = " + timeBonus;
+        document.querySelector('#total-score').textContent = timeBonus + parseInt(scoreGems);
+    }
+
+    function winScreen() {
+        finalData();
+        overlayOn = true;
+        document.getElementById('win-screen').style.display = 'block';
+    }
+
+    function closeWinScreen() {
+        document.getElementById('win-screen').style.display = 'none';
+        reset();
+        overlayOn = false;
+    }
+
+    document.querySelector('#win-screen').addEventListener('click', closeWinScreen);
 
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
@@ -188,6 +268,9 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        allGems.forEach(function(gem) {
+           gem.render();
+        })
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
@@ -201,7 +284,36 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        player.reset();
+        allEnemies.forEach(function(enemy) {
+            enemy.reset();
+        })
+        allGems.forEach(function(gem) {
+            gem.reset();
+        })
+        document.querySelector('#score-data').textContent = 0;
+        document.querySelector('#timer-data').textContent = 20;
+        document.querySelector('#lives-data').textContent = 3;
+        startTimer();
     }
+
+let stoptimer;
+// Display time since start of the game
+    function startTimer() {
+        const timer = document.querySelector('#timer-data');
+        let counter = 20;
+        stoptimer = false;
+        const interval = setInterval(function() {
+            if(stoptimer === true || counter === 0) {
+              clearInterval(interval);
+            }
+            else {
+            counter--;
+            timer.textContent = counter;
+            }
+            }, 1000);
+    }
+
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
@@ -216,8 +328,10 @@ var Engine = (function(global) {
         'images/char-cat-girl.png',
         'images/char-horn-girl.png',
         'images/char-pink-girl.png',
-        'images/char-princess-girl.png'
-        
+        'images/char-princess-girl.png',
+        'images/gem-blue.png',
+        'images/gem-green.png',
+        'images/gem-orange.png'
     ]);
     Resources.onReady(selectAvatar);
 

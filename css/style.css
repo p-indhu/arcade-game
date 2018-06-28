@@ -2,6 +2,45 @@ body {
     text-align: center;
 }
 
+#top-panel {
+    width: 100%;
+    height: 100px;
+    display: flex;
+}
+
+#logo {
+    width: 40%;
+    height: 100px;
+    height: inherit;
+    align-items: center;
+}
+
+#score {
+    width: 30%;
+    padding-top: 80px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 1000;
+    color: #996600;
+}
+
+#timer {
+    width: 30%;
+    padding-top: 80px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 1000;
+    color: #996600;
+}
+
+#lives {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 1000;
+    color: #996600;
+    margin: 0;
+}
+
 #avatar {
     position: fixed;
     display: none;
@@ -27,8 +66,49 @@ body {
     -ms-transform: translate(-50%,-50%);
 }
 
-p {
+#select-avatar {
     font-family: "Comic Sans MS", cursive, sans-serif;
     font-weight: 1000;
     font-size: 40px;
+}
+
+/* Styles for screen with winning data */
+#win-screen {
+    position: fixed;
+    display: none;
+    background-color: rgba(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    cursor: pointer;
+}
+
+#lose-screen {
+    position: fixed;
+    display: none;
+    background-color: rgba(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    cursor: pointer;
+}
+
+
+#text {
+    position: absolute;
+    font-size: 20px;
+    color: white;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
 }
