@@ -2,24 +2,17 @@
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
  * render methods on your player and enemy objects (defined in your app.js).
- *
- * A game engine works by drawing the entire game screen over and over, kind of
- * like a flipbook you may have created as a kid. When your player moves across
- * the screen, it may look like just that image/character is moving or being
- * drawn but that is not the case. What's really happening is the entire "scene"
- * is being drawn over and over, presenting the illusion of animation.
- *
- * This engine makes the canvas' context (ctx) object globally available to make
- * writing app.js a little simpler to work with.
  */
+
 let overlayOn = false;
-var Engine = (function(global) {
+let Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
-    var doc = global.document,
+    let doc = global.document,
         win = global.window,
+
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
@@ -37,7 +30,7 @@ var Engine = (function(global) {
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
-        var now = Date.now(),
+        let now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
         /* Call our update/render functions, pass along the time delta to
@@ -68,16 +61,23 @@ var Engine = (function(global) {
         startTimer();
     }
 
+    /*
+    * Change Overlay screen's display to be visible
+    */
     function selectAvatar() {
         document.getElementById('avatar').style.display = 'block';
     }
 
+    /*
+    * Change Overlay screen's display to be invisible and set the player image
+    */
     function closeAvatarScreen(evt) {
         document.getElementById('avatar').style.display = 'none';
         player.setSprite(evt.target.id);
         init();
     }
 
+    // Event listeners to select the avatar clicked
     document.querySelector('#char-boy').addEventListener('click', closeAvatarScreen);
     document.querySelector('#char-cat-girl').addEventListener('click', closeAvatarScreen);
     document.querySelector('#char-horn-girl').addEventListener('click', closeAvatarScreen);
@@ -85,13 +85,7 @@ var Engine = (function(global) {
     document.querySelector('#char-princess-girl').addEventListener('click', closeAvatarScreen);
 
     /* This function is called by main (our game loop) and itself calls all
-     * of the functions which may need to update entity's data. Based on how
-     * you implement your collision detection (when two entities occupy the
-     * same space, for instance when your character should die), you may find
-     * the need to add an additional function call here. For now, we've left
-     * it commented out - you may or may not want to implement this
-     * functionality this way (you could just implement collision detection
-     * on the entities themselves within your app.js file).
+     * of the functions which may need to update entity's data.
      */
     function update(dt) {
         updateEntities(dt);
@@ -103,9 +97,7 @@ var Engine = (function(global) {
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
-     * player object. These update methods should focus purely on updating
-     * the data/properties related to the object. Do your drawing in your
-     * render methods.
+     * player object.
      */
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
@@ -142,11 +134,17 @@ var Engine = (function(global) {
           }
     }
 
+    /*
+    * Makes the overlay screen with losing message visible
+    */
     function loseScreen() {
         overlayOn = true;
         document.getElementById('lose-screen').style.display = 'block';
     }
 
+    /*
+    * Makes the overlay screen with losing message invisible and resets the game
+    */
     function closeLoseScreen() {
         document.getElementById('lose-screen').style.display = 'none';
         reset();
@@ -155,36 +153,43 @@ var Engine = (function(global) {
 
     document.querySelector('#lose-screen').addEventListener('click', closeLoseScreen);
 
+    /*
+    Checks if player is on the same block as the gem.  If so, the gem is collected
+    and correspondingly score is changed.
+    */
     function checkGemCollection() {
-      const playerX = player.getX();
-      const playerY = player.getY();
-      let sameY = false;
-      let sameX = false;
-      let color;
-      allGems.forEach(function(gem) {
-          if(gem.getY() === playerY) {
-              sameY = true;
-              if(gem.getX() == playerX) {
-                  sameX = true;
-                  color = gem.getColor();
-                  gem.collected();
-                  switch(color) {
-                      case 'blue':
-                          player.points += 10;
-                          break;
-                      case 'green':
-                          player.points += 20;
-                          break;
-                      case 'orange':
-                          player.points += 50;
-                          break;
-                  }
-                  document.querySelector('#score-data').innerHTML = player.points;
-              }
-          }
-      });
+        const playerX = player.getX();
+        const playerY = player.getY();
+        let sameY = false;
+        let sameX = false;
+        let color;
+        allGems.forEach(function(gem) {
+            if(gem.getY() === playerY) {
+                sameY = true;
+                if(gem.getX() == playerX) {
+                    sameX = true;
+                    color = gem.getColor();
+                    gem.collected();
+                    switch(color) {
+                        case 'blue':
+                            player.points += 10;
+                            break;
+                        case 'green':
+                            player.points += 20;
+                            break;
+                        case 'orange':
+                            player.points += 50;
+                            break;
+                    }
+                    document.querySelector('#score-data').innerHTML = player.points;
+                }
+            }
+        });
     }
 
+    /*
+    If the player reaches the water block (y == 0), the game is won
+    */
     function checkForWin() {
         if(player.getY() === 0) {
             stoptimer = true;
@@ -192,21 +197,30 @@ var Engine = (function(global) {
         }
     }
 
+    /*
+    * Display the score and bonus score (calculated from remaining time)
+    */
     function finalData() {
         const scoreGems = document.querySelector('#score-data').textContent;
         document.querySelector('#score-gems').textContent = scoreGems;
         const time = document.querySelector('#timer-data').textContent;
         const timeBonus = 5 * parseInt(time);
-        document.querySelector('#time-bonus').textContent = time + " = " + timeBonus;
+        document.querySelector('#time-bonus').textContent = time + ' = ' + timeBonus;
         document.querySelector('#total-score').textContent = timeBonus + parseInt(scoreGems);
     }
 
+    /*
+    * Make winning message overlay screen visible
+    */
     function winScreen() {
         finalData();
         overlayOn = true;
         document.getElementById('win-screen').style.display = 'block';
     }
 
+    /*
+    * Make winning message overlay screen invisible
+    */
     function closeWinScreen() {
         document.getElementById('win-screen').style.display = 'none';
         reset();
@@ -225,7 +239,7 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
-        var rowImages = [
+        let rowImages = [
                 'images/water-block.png',   // Top row is water
                 'images/stone-block.png',   // Row 1 of 3 of stone
                 'images/stone-block.png',   // Row 2 of 3 of stone
@@ -262,12 +276,9 @@ var Engine = (function(global) {
 
     /* This function is called by the render function and is called on each game
      * tick. Its purpose is to then call the render functions you have defined
-     * on your enemy and player entities within app.js
+     * on gem, enemy and player entities
      */
     function renderEntities() {
-        /* Loop through all of the objects within the allEnemies array and call
-         * the render function you have defined.
-         */
         allGems.forEach(function(gem) {
            gem.render();
         })
@@ -278,12 +289,11 @@ var Engine = (function(global) {
         player.render();
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
-     */
+    /*
+    * Resets the game when won or lost.  Calls the reset method of each class
+    and resets the values of variables displayed on screen
+    */
     function reset() {
-        // noop
         player.reset();
         allEnemies.forEach(function(enemy) {
             enemy.reset();
@@ -297,8 +307,8 @@ var Engine = (function(global) {
         startTimer();
     }
 
-let stoptimer;
-// Display time since start of the game
+    let stoptimer;
+    // Countdown time since start of the game
     function startTimer() {
         const timer = document.querySelector('#timer-data');
         let counter = 20;

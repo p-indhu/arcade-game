@@ -2,6 +2,7 @@ body {
     text-align: center;
 }
 
+/*Styles to display logo, score, timer and lives remaining*/
 #top-panel {
     width: 100%;
     height: 100px;
@@ -41,6 +42,7 @@ body {
     margin: 0;
 }
 
+/*Styles to add 'select player' overlay*/
 #avatar {
     position: fixed;
     display: none;
@@ -55,7 +57,8 @@ body {
     cursor: pointer;
 }
 
-#images {
+#images,
+#text {
     position: absolute;
     font-size: 20px;
     color: white;
@@ -72,21 +75,8 @@ body {
     font-size: 40px;
 }
 
-/* Styles for screen with winning data */
-#win-screen {
-    position: fixed;
-    display: none;
-    background-color: rgba(0,0,0,0.5);
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
-    cursor: pointer;
-}
-
+/* Styles for overlay screen with winning and losing data */
+#win-screen,
 #lose-screen {
     position: fixed;
     display: none;
@@ -99,16 +89,4 @@ body {
     bottom: 0;
     z-index: 2;
     cursor: pointer;
-}
-
-
-#text {
-    position: absolute;
-    font-size: 20px;
-    color: white;
-    top: 50%;
-    left: 50%;
-    text-align: center;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
 }

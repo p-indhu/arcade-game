@@ -1,12 +1,6 @@
 // Enemies our player must avoid
 class Enemy {
 constructor(x, y) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
@@ -17,18 +11,14 @@ constructor(x, y) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-  //  const randomspeed = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
     if(this.x < 505) {
-        this.x = this.x  + this.speed + dt;
+        this.x = this.x  + (this.speed * 55 * dt);
       }
     else {
         this.x = -90;
         this.changeSpeed();
         this.changeRow();
       }
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
 };
 
 // Change the speed of the enemy randomly
@@ -54,13 +44,12 @@ Enemy.prototype.getY = function() {
     return this.y;
 };
 
+// Reset the enemy bug to start from the left of screen
 Enemy.prototype.reset = function() {
     this.x = 0;
 }
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// Player class
 class Player {
 constructor(x, y) {
     this.sprite = 'images/char-boy.png';
@@ -73,11 +62,8 @@ constructor(x, y) {
 
 // Update the players's position, required method for game
 Player.prototype.update = function(x, y) {
-        this.x = (this.x + x);
-        this.y = (this.y + y);
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+        this.x = this.x + x;
+        this.y = this.y + y;
 };
 
 // Draw the player on the screen, required method for game
@@ -123,13 +109,16 @@ Player.prototype.getX = function() {
 };
 
 Player.prototype.getY = function() {
-  return this.y;
+    return this.y;
 };
 
+// Set the image for player
 Player.prototype.setSprite = function(sprite) {
     this.sprite = 'images/'+sprite+'.png';
 }
 
+// Reset the player to the initial position, setting points to 0 and remaining
+// life to 3 when the game is reset (won or lost)
 Player.prototype.reset = function() {
     this.x = 202;
     this.y = 415;
@@ -137,6 +126,7 @@ Player.prototype.reset = function() {
     this.life = 3;
 }
 
+// Gem class to represent the gems to be collected
 class Gem {
 constructor(x, y, color) {
     this.sprite = 'images/gem-'+color+'.png';
@@ -146,10 +136,12 @@ constructor(x, y, color) {
 }
 }
 
+// Draw the gem on the screen, required method for game
 Gem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x + 28, this.y + 32, 50, 85);
 };
 
+// Move the gem off screen when it is collected by the player
 Gem.prototype.collected = function() {
     this.x = -100;
     this.y = -100;
@@ -175,14 +167,13 @@ Gem.prototype.setY = function() {
     this.y = yValues[Math.floor(Math.random() * yValues.length)];
 }
 
+// Set a random position to the gems
 Gem.prototype.reset = function() {
     this.setX();
     this.setY();
 }
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+//initiating required player, enemy and gem objects
 let player = new Player(202, 415);
 let enemy1 = new Enemy(0, 249);
 let enemy2 = new Enemy(0, 83);
@@ -196,10 +187,9 @@ let gem3 = new Gem(xValues[Math.floor(Math.random() * xValues.length)], yValues[
 let allGems = [gem1, gem2, gem3];
 
 // This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Player.handleInput() method
 document.addEventListener('keyup', function(e) {
-
-    var allowedKeys = {
+    let allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',

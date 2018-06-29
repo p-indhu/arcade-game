@@ -6,37 +6,39 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <section id="top-panel">
+        <p id="score">Score : <span id="score-data">0</span></p>
+        <img id="logo" src="images/logo.png" alt="Fogger">
+        <p id="timer">Time (in seconds) : <span id="timer-data">20</timer></p>
+    </section>
+    <p id="lives">Lives Remaining : <span id="lives-data">3</span></p>
 
-  <div id="top-panel">
-      <p id="score">Score : <span id="score-data">0</span></p>
-      <img id="logo" src="images/logo.png" alt="Fogger">
-      <p id="timer">Time (in seconds) : <span id="timer-data">20</timer></p>
-  </div>
-  <p id="lives">Lives Remaining : <span id="lives-data">3</span></p>
-
-  <div id="avatar">
-    <div id="images">
-      <p id="select-avatar">Select an Avatar</p>
-      <img id="char-boy" src="images/char-boy.png" alt="character-boy">
-      <img id="char-cat-girl" src="images/char-cat-girl.png" alt="character-cat-girl">
-      <img id="char-horn-girl" src="images/char-horn-girl.png" alt="character-horn-girl">
-      <img id="char-pink-girl" src="images/char-pink-girl.png" alt="character-pink-girl">
-      <img id="char-princess-girl" src="images/char-princess-girl.png" alt="character-princess-girl">
-    </div>
-  </div>
-  <div id="win-screen" tabindex="1">
-      <div id="text">
-          <p>Congratulations! You have won!<p>
-          <p>Score from Gems : <span id="score-gems"></span></p>
-          <p>Time bonus : 5 * <span id="time-bonus"></span></p>
-          <p>Total Score : <span id="total-score"></span></p>
-      </div>
-  </div>
-  <div id="lose-screen">
-      <div id="text">
-          <p>Sorry! You are out of lives! Try again!<p>
-      </div>
-  </div>
+    <main>
+        <section id="avatar">
+          <div id="images">
+            <p id="select-avatar">Select an Avatar</p>
+            <img id="char-boy" src="images/char-boy.png" alt="character-boy">
+            <img id="char-cat-girl" src="images/char-cat-girl.png" alt="character-cat-girl">
+            <img id="char-horn-girl" src="images/char-horn-girl.png" alt="character-horn-girl">
+            <img id="char-pink-girl" src="images/char-pink-girl.png" alt="character-pink-girl">
+            <img id="char-princess-girl" src="images/char-princess-girl.png" alt="character-princess-girl">
+          </div>
+        </section>
+        <section id="win-screen" tabindex="1">
+            <div id="text">
+                <p>Congratulations! You have won!<p>
+                <p>Score from Gems : <span id="score-gems"></span></p>
+                <p>Time bonus : 5 * <span id="time-bonus"></span></p>
+                <p>Total Score : <span id="total-score"></span></p>
+                <p>Click anywhere to start a new game!</p>
+            </div>
+        </section>
+        <section id="lose-screen">
+            <div id="text">
+                <p>Sorry! You are out of lives! Try again!  Click anywhere to start a new game<p>
+            </div>
+        </section>
+    </main>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
