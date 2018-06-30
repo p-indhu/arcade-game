@@ -119,7 +119,7 @@ let Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             if(enemy.getY() === playerY) {
                 sameY = true;
-                if((Math.floor(enemy.getX()+80/101)) == (playerX/101)) {
+                if((Math.floor((enemy.getX()+80)/101)) == (playerX/101)) {
                     sameX = true;
                 }
             }
